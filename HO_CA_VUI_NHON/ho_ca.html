@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hồ cá vui nhộn</title>
+  <meta name="description" content="Bài 6.1.1 Thiết kế Web: hồ cá chuyển động bằng HTML5 và CSS3, có đổi cảnh nền, nhạc nền và nút tạm dừng.">
+  <link rel="icon" href="images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="mystyle.css">
+</head>
+
+<body>
+  <!-- Thanh trên cùng: tên bài bên trái, nút điều khiển ở góc trên bên phải -->
+  <header class="thanh-tren">
+    <div class="ben-trai">
+      <a class="ve-trang-chu" href="../index.html"><span aria-hidden="true">←</span> Trang chủ</a>
+      <h1 class="ten-bai">Hồ cá vui nhộn</h1>
+    </div>
+    <div class="dieu-khien">
+      <button id="nut-canh" type="button">Đổi cảnh nền <small id="ten-canh">Biển xanh 1/4</small></button>
+      <button id="nut-nhac" type="button"><span aria-hidden="true">♪</span> <span id="chu-nhac">Bật nhạc</span></button>
+      <button id="nut-dung" type="button">Tạm dừng</button>
+    </div>
+  </header>
+
+  <!-- Hồ cá: mọi con vật nằm trong khối #content -->
+  <div id="content" class="canh-1">
+
+    <!-- Đàn cá xanh ở xa (nằm sau cùng) -->
+    <div id="faintSchool" class="con-vat"><img src="images/faintSchool.png" alt="Đàn cá xanh ở xa"></div>
+
+    <!-- Bong bóng nổi lên từ đáy -->
+    <div id="bong-bong" aria-hidden="true">
+      <span class="bong"></span><span class="bong"></span><span class="bong"></span><span class="bong"></span>
+      <span class="bong"></span><span class="bong"></span><span class="bong"></span><span class="bong"></span>
+      <span class="bong"></span><span class="bong"></span><span class="bong"></span><span class="bong"></span>
+    </div>
+
+    <!-- Rong biển đung đưa -->
+    <img id="rong1" class="rong" src="images/rong1.svg" alt="">
+    <img id="rong2" class="rong" src="images/rong2.svg" alt="">
+    <img id="rong3" class="rong" src="images/rong1.svg" alt="">
+    <img id="rong4" class="rong" src="images/rong2.svg" alt="">
+    <img id="rong5" class="rong" src="images/rong1.svg" alt="">
+
+    <!-- Rùa bơi chậm gần đáy -->
+    <div id="turtle" class="con-vat"><img src="images/turtle.png" alt="Rùa biển"></div>
+
+    <!-- Ba thợ lặn lặn xuống và nổi lên -->
+    <div id="diver1" class="con-vat tho-lan"><img src="images/diver1.png" alt="Thợ lặn thứ nhất"></div>
+    <div id="diver2" class="con-vat tho-lan"><img src="images/diver2.png" alt="Thợ lặn thứ hai"></div>
+    <div id="diver3" class="con-vat tho-lan"><img src="images/diver3.png" alt="Thợ lặn thứ ba"></div>
+
+    <!-- Đàn cá vàng -->
+    <div id="goldFishSchool" class="con-vat"><img src="images/goldFishSchool.png" alt="Đàn cá vàng"></div>
+
+    <!-- Cá mập bơi nhanh nhất (nằm trên cùng) -->
+    <div id="shark" class="con-vat"><img src="images/shark.png" alt="Cá mập"></div>
+  </div>
+
+  <!-- Nhạc nền (tự soạn, phát lặp lại) -->
+  <audio id="nhac" src="audio/bien-xanh.mp3" loop preload="none"></audio>
+
+  <script>
+    // ---------- 1. Nút đổi cảnh nền: 4 cảnh thay phiên nhau sau mỗi lần nhấn ----------
+    const hoCa = document.getElementById("content");
+    const nutCanh = document.getElementById("nut-canh");
+    const tenCanh = document.getElementById("ten-canh");
+    const dsCanh = ["Biển xanh", "Rạn san hô", "Hoàng hôn", "Biển đêm"];
+    let canh = 0; // đang ở cảnh thứ nhất (lớp canh-1)
+
+    nutCanh.addEventListener("click", function () {
+      hoCa.classList.remove("canh-" + (canh + 1));
+      canh = (canh + 1) % dsCanh.length; // 0 -> 1 -> 2 -> 3 -> 0 ...
+      hoCa.classList.add("canh-" + (canh + 1));
+      tenCanh.textContent = dsCanh[canh] + " " + (canh + 1) + "/" + dsCanh.length;
+    });
+
+    // ---------- 2. Nút phát nhạc / ngừng phát nhạc ----------
+    const nhac = document.getElementById("nhac");
+    const nutNhac = document.getElementById("nut-nhac");
+    const chuNhac = document.getElementById("chu-nhac");
+    nhac.volume = 0.6;
+
+    nutNhac.addEventListener("click", function () {
+      if (nhac.paused) {
+        nhac.play().catch(function () {
+          chuNhac.textContent = "Không mở được nhạc";
+        });
+      } else {
+        nhac.pause();
+      }
+    });
+    nhac.addEventListener("play", function () {
+      chuNhac.textContent = "Tắt nhạc";
+      nutNhac.classList.add("dang-bat");
+    });
+    nhac.addEventListener("pause", function () {
+      chuNhac.textContent = "Bật nhạc";
+      nutNhac.classList.remove("dang-bat");
+    });
+
+    // ---------- 3. Nút tạm dừng: đổi animation-play-state của cả hồ ----------
+    const nutDung = document.getElementById("nut-dung");
+    nutDung.addEventListener("click", function () {
+      const dangDung = hoCa.classList.toggle("tam-dung");
+      nutDung.textContent = dangDung ? "Bơi tiếp" : "Tạm dừng";
+      nutDung.classList.toggle("dang-bat", dangDung);
+    });
+  </script>
+</body>
+</html>

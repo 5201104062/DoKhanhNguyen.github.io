@@ -1,0 +1,391 @@
+/* =====================================================================
+   HỒ CÁ VUI NHỘN - mystyle.css
+   Bài 6.1.1, sách Bài tập Thiết kế Web (HTML5 & CSS3)
+
+   Cách đọc các mốc % trong @keyframes:
+   - Mốc % là phần trăm THỜI GIAN của một vòng chuyển động.
+     Ví dụ cá mập chạy 10 giây một vòng: 20% = giây thứ 2, 50% = giây thứ 5.
+   - Tại mỗi mốc, left/top cho biết con vật bơi TỚI ĐÂU.
+       left: 0                           -> sát tường trái
+       left: var(--duong)                -> sát tường phải
+       left: calc(var(--duong) * 0.3)    -> đã bơi được 30% quãng đường ngang
+       top: 40%                          -> cách mặt nước 40% chiều cao hồ
+   - Giữa hai mốc, trình duyệt tự vẽ con vật di chuyển dần từ chỗ này sang chỗ kia.
+   - Ảnh nào cũng quay mặt sang phải. Khi bơi sang trái thì lật ảnh bằng
+     transform: scaleX(-1). Hai mốc 49.9% và 50% đứng sát nhau nên con vật
+     quay đầu ngay lúc chạm tường.
+   ===================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+  background: #0b5d95;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ---------- Hồ cá: phủ kín màn hình, là "bốn bức tường" để cá quay đầu ---------- */
+#content {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #0b5d95 center bottom / cover no-repeat;
+  transition: background-image 0.6s;
+}
+
+/* 4 cảnh nền, nút "Đổi cảnh nền" sẽ thay lớp canh-1 ... canh-4 */
+#content.canh-1 { background-image: url("images/nen1.svg"); }
+#content.canh-2 { background-image: url("images/nen2.svg"); }
+#content.canh-3 { background-image: url("images/nen3.svg"); }
+#content.canh-4 { background-image: url("images/nen4.svg"); }
+
+/* Ban đêm thì con vật tối bớt, hoàng hôn thì ấm màu hơn */
+#content.canh-3 .con-vat img { filter: sepia(0.2) saturate(1.15); }
+#content.canh-4 .con-vat img { filter: brightness(0.75) saturate(0.85); }
+#content.canh-4 .rong { filter: brightness(0.5); }
+
+/* ---------- Phần chung của mọi con vật ---------- */
+.con-vat {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--w);                       /* --w: bề rộng con vật, đặt riêng cho từng con */
+  --duong: calc(100% - var(--w));        /* quãng đường ngang = bề rộng hồ - bề rộng con vật */
+}
+
+.con-vat img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* =====================================================================
+   CÁ MẬP - bơi nhanh nhất: 10 giây đi hết một vòng (sang phải rồi về trái)
+   ===================================================================== */
+#shark {
+  --w: 230px;
+  z-index: 7;
+  animation-name: Shark;
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: running;
+}
+
+@keyframes Shark {
+  0%    { left: 0;                         top: 45%; transform: scaleX(1);  } /* giây 0   : sát tường trái, giữa hồ, mặt quay sang phải */
+  15%   { left: calc(var(--duong) * 0.25); top: 30%; }                       /* giây 1,5 : bơi được 25% đường, ngoi lên */
+  30%   { left: calc(var(--duong) * 0.55); top: 50%; }                       /* giây 3   : bơi được 55% đường, lặn xuống */
+  49.9% { left: var(--duong);              top: 38%; transform: scaleX(1);  } /* giây 5   : chạm tường phải */
+  50%   { left: var(--duong);              top: 38%; transform: scaleX(-1); } /* ngay lúc đó: quay đầu sang trái */
+  65%   { left: calc(var(--duong) * 0.7);  top: 25%; }                       /* giây 6,5 : còn 70% đường, ngoi lên cao */
+  80%   { left: calc(var(--duong) * 0.35); top: 52%; }                       /* giây 8   : còn 35% đường, lặn xuống thấp */
+  100%  { left: 0;                         top: 45%; transform: scaleX(-1); } /* giây 10  : chạm tường trái, vòng sau quay đầu lại */
+}
+
+/* =====================================================================
+   RÙA - bơi chậm: 36 giây một vòng, đi gần đáy
+   ===================================================================== */
+#turtle {
+  --w: 150px;
+  z-index: 4;
+  animation-name: Turtle;
+  animation-duration: 36s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: -9s;                  /* số âm: vào trang là rùa đã đang bơi (bắt đầu ở giây 9) */
+}
+
+@keyframes Turtle {
+  0%    { left: 0;                         top: 66%; transform: scaleX(1);  } /* giây 0  : sát tường trái */
+  25%   { left: calc(var(--duong) * 0.5);  top: 58%; }                       /* giây 9  : tới giữa hồ, nhích lên một chút */
+  49.9% { left: var(--duong);              top: 66%; transform: scaleX(1);  } /* giây 18 : chạm tường phải */
+  50%   { left: var(--duong);              top: 66%; transform: scaleX(-1); } /* quay đầu sang trái */
+  75%   { left: calc(var(--duong) * 0.5);  top: 61%; }                       /* giây 27 : về tới giữa hồ */
+  100%  { left: 0;                         top: 66%; transform: scaleX(-1); } /* giây 36 : về tường trái */
+}
+
+/* =====================================================================
+   ĐÀN CÁ VÀNG - 16 giây một vòng, xuất phát từ tường PHẢI bơi sang trái
+   ===================================================================== */
+#goldFishSchool {
+  --w: 120px;
+  z-index: 6;
+  animation-name: GoldFish;
+  animation-duration: 16s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes GoldFish {
+  0%    { left: var(--duong);              top: 22%; transform: scaleX(-1); } /* giây 0    : sát tường phải, mặt quay sang trái */
+  20%   { left: calc(var(--duong) * 0.65); top: 32%; }                       /* giây 3,2  : còn 65% đường */
+  35%   { left: calc(var(--duong) * 0.35); top: 18%; }                       /* giây 5,6  : còn 35% đường, ngoi lên */
+  49.9% { left: 0;                         top: 26%; transform: scaleX(-1); } /* giây 8    : chạm tường trái */
+  50%   { left: 0;                         top: 26%; transform: scaleX(1);  } /* quay đầu sang phải */
+  70%   { left: calc(var(--duong) * 0.4);  top: 36%; }                       /* giây 11,2 : bơi được 40% đường, lặn xuống */
+  85%   { left: calc(var(--duong) * 0.7);  top: 20%; }                       /* giây 13,6 : bơi được 70% đường */
+  100%  { left: var(--duong);              top: 22%; transform: scaleX(1);  } /* giây 16   : về tường phải */
+}
+
+/* =====================================================================
+   ĐÀN CÁ XANH Ở XA - nhỏ, mờ, chậm: 30 giây một vòng, gần mặt nước
+   ===================================================================== */
+#faintSchool {
+  --w: 200px;
+  z-index: 1;
+  opacity: 0.6;
+  animation-name: FaintFish;
+  animation-duration: 30s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: -10s;
+}
+
+@keyframes FaintFish {
+  0%    { left: 0;                         top: 12%; transform: scaleX(1);  } /* giây 0    : sát tường trái */
+  25%   { left: calc(var(--duong) * 0.5);  top: 17%; }                       /* giây 7,5  : tới giữa hồ */
+  49.9% { left: var(--duong);              top: 12%; transform: scaleX(1);  } /* giây 15   : chạm tường phải */
+  50%   { left: var(--duong);              top: 12%; transform: scaleX(-1); } /* quay đầu */
+  75%   { left: calc(var(--duong) * 0.5);  top: 8%;  }                       /* giây 22,5 : về giữa hồ */
+  100%  { left: 0;                         top: 12%; transform: scaleX(-1); } /* giây 30   : về tường trái */
+}
+
+/* =====================================================================
+   BA THỢ LẶN - lặn xuống rồi nổi lên. Dùng chung @keyframes Diver,
+   nhưng mỗi người một thời gian nên không ai giống ai.
+   ===================================================================== */
+.tho-lan {
+  --w: 190px;
+  z-index: 5;
+  animation-name: Diver;
+  animation-timing-function: ease-in-out;  /* chậm ở đầu và cuối mỗi đoạn, như người thật */
+  animation-iteration-count: infinite;
+}
+
+#diver1 { left: 6%;  animation-duration: 14s; }
+#diver2 { left: 38%; animation-duration: 18s; animation-delay: -6s; }
+#diver3 { left: 70%; animation-duration: 22s; animation-delay: -13s; --w: 160px; }
+
+@keyframes Diver {
+  0%   { top: 6%;  transform: rotate(0deg);   } /* ở gần mặt nước, người nằm ngang */
+  10%  { top: 9%;  transform: rotate(20deg);  } /* chúc đầu xuống */
+  45%  { top: 58%; transform: rotate(20deg);  } /* lặn sâu gần tới đáy */
+  50%  { top: 60%; transform: rotate(0deg);   } /* chạm đáy: nằm ngang lại */
+  60%  { top: 56%; transform: rotate(-20deg); } /* ngóc đầu lên */
+  95%  { top: 8%;  transform: rotate(-20deg); } /* nổi lên gần mặt nước */
+  100% { top: 6%;  transform: rotate(0deg);   } /* về chỗ cũ, bắt đầu vòng mới */
+}
+/* Ví dụ thợ lặn 1 (14 giây): 45% = giây 6,3 thì xuống gần đáy, 95% = giây 13,3 thì lên gần mặt nước. */
+
+/* =====================================================================
+   BONG BÓNG - chỉ đi lên, càng lên càng to, tới mặt nước thì vỡ
+   ===================================================================== */
+#bong-bong {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.bong {
+  position: absolute;
+  bottom: 4%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.2) 45%, rgba(255, 255, 255, 0.06) 70%);
+  opacity: 0;
+  animation-name: Bubble;
+  animation-timing-function: ease-in;      /* càng lên càng nhanh */
+  animation-iteration-count: infinite;
+}
+
+@keyframes Bubble {
+  0%   { bottom: 4%;   opacity: 0;   transform: translateX(0) scale(0.6);    } /* sinh ra dưới đáy */
+  10%  {               opacity: 0.9; }
+  35%  {                             transform: translateX(8px) scale(0.75); } /* lắc nhẹ sang phải */
+  65%  {                             transform: translateX(-8px) scale(0.9); } /* lắc nhẹ sang trái */
+  90%  {               opacity: 0.8; }
+  100% { bottom: 100%; opacity: 0;   transform: translateX(0) scale(1.1);    } /* lên tới mặt nước thì vỡ */
+}
+
+/* 3 dòng bong bóng, mỗi quả một cỡ, một tốc độ */
+.bong:nth-child(1)  { left: 15%;   width: 12px; height: 12px; animation-duration: 7s;  animation-delay: -1s; }
+.bong:nth-child(2)  { left: 16%;   width: 8px;  height: 8px;  animation-duration: 6s;  animation-delay: -3.5s; }
+.bong:nth-child(3)  { left: 14.5%; width: 16px; height: 16px; animation-duration: 8s;  animation-delay: -5s; }
+.bong:nth-child(4)  { left: 15.5%; width: 10px; height: 10px; animation-duration: 6.5s; animation-delay: -6.2s; }
+.bong:nth-child(5)  { left: 55%;   width: 14px; height: 14px; animation-duration: 9s;  animation-delay: -0.5s; }
+.bong:nth-child(6)  { left: 56%;   width: 9px;  height: 9px;  animation-duration: 7.5s; animation-delay: -4s; }
+.bong:nth-child(7)  { left: 54.5%; width: 18px; height: 18px; animation-duration: 10s; animation-delay: -7s; }
+.bong:nth-child(8)  { left: 55.5%; width: 11px; height: 11px; animation-duration: 8s;  animation-delay: -2.5s; }
+.bong:nth-child(9)  { left: 88%;   width: 13px; height: 13px; animation-duration: 8.5s; animation-delay: -2s; }
+.bong:nth-child(10) { left: 89%;   width: 8px;  height: 8px;  animation-duration: 6s;  animation-delay: -4.5s; }
+.bong:nth-child(11) { left: 87.5%; width: 15px; height: 15px; animation-duration: 9.5s; animation-delay: -6.5s; }
+.bong:nth-child(12) { left: 88.5%; width: 10px; height: 10px; animation-duration: 7s;  animation-delay: -0.2s; }
+
+/* =====================================================================
+   RONG BIỂN - đung đưa qua lại quanh gốc
+   ===================================================================== */
+.rong {
+  position: absolute;
+  bottom: 2%;
+  z-index: 3;
+  width: auto;
+  transform-origin: 50% 100%;             /* xoay quanh gốc rong, không phải giữa hình */
+  animation-name: Sway;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;         /* đưa sang phải rồi đưa ngược về trái */
+}
+
+@keyframes Sway {
+  0%   { transform: rotate(-6deg); } /* nghiêng trái */
+  100% { transform: rotate(6deg);  } /* nghiêng phải */
+}
+
+#rong1 { left: 3%;  height: 30%; animation-duration: 4s; }
+#rong2 { left: 21%; height: 22%; animation-duration: 5s;   animation-delay: -1.5s; }
+#rong3 { left: 47%; height: 26%; animation-duration: 4.5s; animation-delay: -3s; }
+#rong4 { left: 76%; height: 24%; animation-duration: 5.5s; animation-delay: -2s; }
+#rong5 { left: 92%; height: 32%; animation-duration: 4.2s; animation-delay: -0.7s; }
+
+/* =====================================================================
+   NÚT TẠM DỪNG - dùng animation-play-state để dừng mọi chuyển động
+   ===================================================================== */
+#content.tam-dung,
+#content.tam-dung * {
+  animation-play-state: paused;
+}
+
+/* =====================================================================
+   THANH TRÊN CÙNG: tên bài bên trái, các nút điều khiển bên phải
+   ===================================================================== */
+.thanh-tren {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+}
+
+/* Tên bài nằm trên nền tối mờ giống các nút, để chữ trắng đọc rõ trên mọi cảnh nền */
+.ten-bai {
+  margin: 0;
+  padding: 7px 16px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(4, 30, 60, 0.72);
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Bên trái: nút về trang chủ + tên bài */
+.ben-trai {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dieu-khien {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Các nút và đường dẫn "Trang chủ" dùng chung một kiểu */
+.dieu-khien button,
+.ve-trang-chu {
+  display: inline-block;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(4, 30, 60, 0.72);      /* đủ đậm để chữ trắng đạt độ tương phản trên 7:1 */
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);    /* cho Safari trên iPhone đời cũ */
+  backdrop-filter: blur(6px);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.dieu-khien button:hover,
+.ve-trang-chu:hover {
+  background: rgba(4, 30, 60, 0.9);
+}
+
+.dieu-khien button:active,
+.ve-trang-chu:active {
+  transform: scale(0.96);
+}
+
+/* Viền khi chọn nút bằng phím Tab: vàng kẹp giữa hai viền tối, nhìn rõ trên mọi cảnh nền */
+.ve-trang-chu:focus-visible,
+.dieu-khien button:focus-visible {
+  outline: 3px solid #ffd166;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #0b1d33, 0 0 0 7px #0b1d33;
+}
+
+/* Nút đang bật (nhạc đang phát, hồ đang dừng) thì đổi màu vàng */
+.dieu-khien button.dang-bat {
+  color: #1b2a3a;
+  background: #ffd166;
+  border-color: #ffd166;
+}
+
+.dieu-khien small {
+  font-weight: 400;
+  opacity: 0.92;
+}
+
+/* ---------- Màn hình nhỏ (điện thoại): thu nhỏ con vật và nút ---------- */
+@media (max-width: 700px), (max-height: 500px) {
+  #shark          { --w: 140px; }
+  #turtle         { --w: 100px; }
+  #goldFishSchool { --w: 80px; }
+  #faintSchool    { --w: 130px; }
+  .tho-lan        { --w: 115px; }
+  #diver3         { --w: 100px; }
+
+  #rong1 { height: 20%; }
+  #rong2 { height: 15%; }
+  #rong3 { height: 18%; }
+  #rong4 { height: 16%; }
+  #rong5 { height: 21%; }
+
+  .thanh-tren { padding: 10px 12px; }
+  .ten-bai { font-size: 17px; padding: 6px 12px; }
+  .dieu-khien { gap: 6px; }
+  .dieu-khien button,
+  .ve-trang-chu { font-size: 13px; padding: 7px 10px; }
+}
+
+/* Điện thoại hẹp: tên cảnh xuống dòng trong nút để 3 nút vừa một hàng */
+@media (max-width: 420px) {
+  .dieu-khien small { display: block; }
+}
