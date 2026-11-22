@@ -1,0 +1,496 @@
+/* =========================================================
+   Bài 6.1.3: Thiết kế mẫu CV
+   Bố cục: lưới 2 cột (trái 40%, phải 60%) và 2 hàng
+     Hàng 1: ảnh đại diện          | họ tên, vị trí làm việc
+     Hàng 2: thông tin, kỹ năng,   | học vấn, chứng chỉ,
+             sở thích, tham chiếu  | kinh nghiệm làm việc
+   ========================================================= */
+
+/* ---------- Màu dùng chung (tự đổi sang màu tối khi máy bật chế độ tối) ---------- */
+:root {
+  --nen: #f3f7fa;          /* nền trang */
+  --giay: #ffffff;         /* nền cột phải */
+  --cot-trai: #083b63;     /* nền cột trái */
+  --chu: #0f2438;          /* chữ chính */
+  --chu-phu: #4a6276;      /* chữ phụ: tên trường, nơi làm */
+  --vien: #d8e4ec;         /* đường kẻ */
+  --nhan: #0b5d95;         /* màu nhấn: biểu tượng, mốc thời gian */
+  --ten: #083b63;          /* họ tên và tiêu đề cột phải */
+  --trai-chu: #e4eef6;     /* chữ ở cột trái */
+  --trai-tieu-de: #a9d6f5; /* tiêu đề ở cột trái */
+  --trai-nhan: #7cc8f2;    /* biểu tượng và thanh kỹ năng ở cột trái */
+  --nut: #083b63;          /* nền nút về trang chủ */
+  --nut-vien: #083b63;     /* viền nút về trang chủ */
+  --bong: 0 1px 2px rgba(8, 40, 70, 0.08), 0 12px 32px rgba(8, 40, 70, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --nen: #061629;
+    --giay: #0c2440;
+    --cot-trai: #041427;
+    --chu: #e4eef6;
+    --chu-phu: #9db3c6;
+    --vien: #1c3a57;
+    --nhan: #7cc8f2;
+    --ten: #ffffff;
+    --nut: #0c2440;
+    --nut-vien: #2a4d70;
+    --bong: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--nen);
+  color: var(--chu);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, p, ul, ol {
+  margin: 0;
+}
+
+ul, ol {
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Thanh trên cùng: nút về trang chủ ---------- */
+.thanh-tren {
+  width: min(1000px, 100% - 32px);
+  margin: 0 auto;
+  padding: 16px 0;
+}
+
+.ve-trang-chu {
+  display: inline-block;
+  padding: 7px 16px;
+  border: 1px solid var(--nut-vien);
+  border-radius: 999px;
+  background: var(--nut);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ve-trang-chu:hover {
+  background: #0b5d95;
+  border-color: #0b5d95;
+}
+
+/* ---------- Tờ CV ---------- */
+.cv {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-areas:
+    "anh  ten"
+    "trai phai";
+  width: min(1000px, 100% - 32px);
+  margin: 0 auto 48px;
+  overflow: hidden;
+  background: var(--giay);
+  border-radius: 16px;
+  box-shadow: var(--bong);
+}
+
+.o-anh    { grid-area: anh; }
+.o-ten    { grid-area: ten; }
+.cot-trai { grid-area: trai; }
+.cot-phai { grid-area: phai; }
+
+/* Hai ô bên trái cùng một màu nền nên nhìn như một cột liền */
+.o-anh,
+.cot-trai {
+  background: var(--cot-trai);
+  color: var(--trai-chu);
+}
+
+/* ---------- Hàng 1 ---------- */
+.o-anh {
+  display: flex;
+  justify-content: center;
+  padding: 40px 32px 28px;
+}
+
+.anh-dai-dien {
+  display: block;
+  width: 176px;
+  height: 176px;
+  object-fit: cover;          /* ảnh nào cũng được cắt vừa khung tròn */
+  border: 5px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.o-ten {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 44px 28px;
+  border-bottom: 1px solid var(--vien);
+}
+
+.o-ten h1 {
+  color: var(--ten);
+  font-size: clamp(30px, 4.2vw, 42px);
+  font-weight: 800;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.vi-tri {
+  margin-top: 10px;
+  color: var(--nhan);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Hàng 2, cột trái ---------- */
+.cot-trai {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 8px 32px 40px;
+  font-size: 15px;
+}
+
+.cot-trai h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--trai-tieu-de);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cot-trai .fa-solid {
+  color: var(--trai-nhan);
+}
+
+.cot-trai a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cot-trai a:hover {
+  text-decoration: underline;
+}
+
+/* Thông tin cá nhân: biểu tượng bên trái, chữ bên phải */
+.thong-tin li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  overflow-wrap: anywhere;    /* email dài thì tự xuống dòng */
+}
+
+.thong-tin li + li {
+  margin-top: 8px;
+}
+
+.thong-tin b {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Kỹ năng: tên bên trái, phần trăm bên phải, thanh màu bên dưới */
+.ky-nang li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 6px;
+}
+
+.ky-nang li + li {
+  margin-top: 12px;
+}
+
+.phan-tram {
+  color: var(--trai-tieu-de);
+  font-weight: 600;
+}
+
+.thanh {
+  grid-column: 1 / -1;
+  height: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+/* Thanh màu dài ra từ 0 tới mức kỹ năng khi mở trang */
+.thanh span {
+  display: block;
+  width: var(--muc);
+  height: 100%;
+  background: var(--trai-nhan);
+  border-radius: inherit;
+  animation: DayThanh 1.2s ease-out both;
+}
+
+.ky-nang li:nth-child(2) .thanh span { animation-delay: 0.15s; }
+.ky-nang li:nth-child(3) .thanh span { animation-delay: 0.3s; }
+.ky-nang li:nth-child(4) .thanh span { animation-delay: 0.45s; }
+
+@keyframes DayThanh {
+  from { width: 0; }
+}
+
+/* Sở thích: mỗi sở thích một ô bo tròn */
+.so-thich {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.so-thich li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+}
+
+/* Người tham chiếu */
+.nguoi + .nguoi {
+  margin-top: 14px;
+}
+
+.ten-nguoi {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ---------- Hàng 2, cột phải ---------- */
+.cot-phai {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 32px 44px 44px;
+}
+
+.cot-phai h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: var(--ten);
+  font-size: 20px;
+}
+
+.cot-phai h2 .fa-solid {
+  color: var(--nhan);
+}
+
+/* Đường kẻ chạy dài sau tiêu đề */
+.cot-phai h2::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: var(--vien);
+}
+
+/* Mốc thời gian: một đường dọc bên trái, mỗi mục có một chấm tròn */
+.moc-thoi-gian {
+  margin-left: 6px;
+  padding-left: 24px;
+  border-left: 2px solid var(--vien);
+}
+
+.moc-thoi-gian li {
+  position: relative;
+}
+
+.moc-thoi-gian li + li {
+  margin-top: 20px;
+}
+
+.moc-thoi-gian li::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: -32px;
+  width: 14px;
+  height: 14px;
+  background: var(--nhan);
+  border: 3px solid var(--giay);
+  border-radius: 50%;
+}
+
+.thoi-gian {
+  color: var(--nhan);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.moc-thoi-gian h3 {
+  margin-top: 2px;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.noi {
+  color: var(--chu-phu);
+  font-size: 15px;
+}
+
+.mo-ta {
+  margin-top: 4px;
+}
+
+.cot-phai a {
+  color: var(--nhan);
+  font-weight: 600;
+}
+
+/* ---------- Dùng bàn phím: viền sáng quanh chỗ đang chọn ---------- */
+a:focus-visible {
+  outline: 3px solid var(--nhan);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.cot-trai a:focus-visible {
+  outline-color: #ffd166;
+}
+
+/* ---------- Điện thoại: xếp thành một cột ---------- */
+@media (max-width: 760px) {
+  .thanh-tren {
+    padding: 12px 0;
+  }
+
+  .cv {
+    grid-template-columns: 100%;
+    grid-template-areas:
+      "anh"
+      "ten"
+      "trai"
+      "phai";
+    width: 100%;
+    margin-bottom: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .o-anh {
+    padding: 32px 16px 16px;
+  }
+
+  .anh-dai-dien {
+    width: 140px;
+    height: 140px;
+  }
+
+  /* Họ tên nằm chung khối màu đậm với ảnh */
+  .o-ten {
+    padding: 0 16px 28px;
+    background: var(--cot-trai);
+    border-bottom: 0;
+    text-align: center;
+  }
+
+  .o-ten h1 {
+    color: #ffffff;
+  }
+
+  .vi-tri {
+    color: var(--trai-tieu-de);
+    font-size: 14px;
+  }
+
+  .cot-trai {
+    padding: 8px 16px 32px;
+  }
+
+  .cot-phai {
+    padding: 28px 16px 40px;
+  }
+}
+
+/* Người dùng tắt hiệu ứng chuyển động thì thanh kỹ năng hiện sẵn */
+@media (prefers-reduced-motion: reduce) {
+  .thanh span {
+    animation: none;
+  }
+}
+
+/* ---------- In ra giấy hoặc lưu PDF (Ctrl + P): gọn trong một trang A4 ---------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  /* Khi in luôn dùng màu sáng */
+  :root {
+    --nen: #ffffff;
+    --giay: #ffffff;
+    --cot-trai: #083b63;
+    --chu: #0f2438;
+    --chu-phu: #4a6276;
+    --vien: #d8e4ec;
+    --nhan: #0b5d95;
+    --ten: #083b63;
+  }
+
+  body {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .thanh-tren {
+    display: none;
+  }
+
+  /* Cột trái màu đậm kéo dài hết trang giấy */
+  .cv {
+    grid-template-rows: auto 1fr;
+    width: 100%;
+    min-height: 296mm;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .o-anh { padding: 28px 24px 18px; }
+  .anh-dai-dien { width: 130px; height: 130px; }
+  .o-ten { padding: 28px 32px 18px; }
+  .o-ten h1 { font-size: 30px; }
+  .vi-tri { font-size: 13px; }
+
+  .cot-trai { gap: 16px; padding: 4px 24px 24px; font-size: 12.5px; }
+  .cot-trai h2 { margin-bottom: 8px; padding-bottom: 6px; font-size: 12px; }
+  .ky-nang li + li { margin-top: 8px; }
+
+  .cot-phai { gap: 18px; padding: 22px 32px 24px; }
+  .cot-phai h2 { margin-bottom: 10px; font-size: 16px; }
+  .moc-thoi-gian li + li { margin-top: 12px; }
+  .moc-thoi-gian h3 { font-size: 14px; }
+  .thoi-gian, .noi { font-size: 12.5px; }
+
+  .cv,
+  .cv * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .thanh span {
+    animation: none;
+  }
+}

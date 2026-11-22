@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV Đỗ Khánh Nguyên</title>
+  <meta name="description" content="Bài 6.1.3 Thiết kế Web: CV của Đỗ Khánh Nguyên, chia hai cột 40% và 60%, có biểu tượng cho thông tin cá nhân.">
+  <link rel="icon" href="../images/favicon.png" type="image/png">
+  <!-- Bộ biểu tượng Font Awesome: chèn biểu tượng bằng thẻ <i class="fa-solid fa-..."> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="mystyle.css">
+</head>
+
+<body>
+  <nav class="thanh-tren">
+    <a class="ve-trang-chu" href="../index.html"><span aria-hidden="true">←</span> Trang chủ</a>
+  </nav>
+
+  <!-- Tờ CV: lưới 2 cột (trái 40%, phải 60%) và 2 hàng, giống bản phác thảo trong sách -->
+  <main class="cv">
+
+    <!-- Hàng 1, bên trái: ảnh đại diện -->
+    <div class="o-anh">
+      <img class="anh-dai-dien" src="anh-dai-dien.jpg" alt="Ảnh đại diện của Đỗ Khánh Nguyên" width="400" height="400">
+    </div>
+
+    <!-- Hàng 1, bên phải: họ tên và vị trí làm việc -->
+    <header class="o-ten">
+      <h1>Đỗ Khánh Nguyên</h1>
+      <p class="vi-tri">IT Engineer</p>
+    </header>
+
+    <!-- Hàng 2, cột trái (40%): giới thiệu, thông tin cá nhân, kỹ năng, sở thích, người tham chiếu -->
+    <div class="cot-trai">
+      <section>
+        <h2><i class="fa-solid fa-user" aria-hidden="true"></i> Giới thiệu</h2>
+        <p>Sinh viên năm nhất Trường Đại học Sư phạm Thành phố Hồ Chí Minh, yêu thích thiết kế web và lập trình.</p>
+      </section>
+
+      <section>
+        <h2><i class="fa-solid fa-address-card" aria-hidden="true"></i> Thông tin cá nhân</h2>
+        <ul class="thong-tin">
+          <li><i class="fa-solid fa-phone" aria-hidden="true"></i><span><b>Điện thoại:</b> <a href="tel:0369937230">0369 937 230</a></span></li>
+          <li><i class="fa-solid fa-envelope" aria-hidden="true"></i><span><b>Email:</b> <a href="mailto:dokhanhnguyen271208@gmail.com">dokhanhnguyen271208@gmail.com</a></span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><i class="fa-solid fa-code" aria-hidden="true"></i> Kỹ năng</h2>
+        <!-- Mức của mỗi kỹ năng ghi ở --muc; thanh màu dài đúng bằng mức đó -->
+        <ul class="ky-nang">
+          <li style="--muc: 70%"><span>Lập trình web</span><span class="phan-tram">70%</span><span class="thanh" aria-hidden="true"><span></span></span></li>
+          <li style="--muc: 80%"><span>Gia sư</span><span class="phan-tram">80%</span><span class="thanh" aria-hidden="true"><span></span></span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><i class="fa-solid fa-heart" aria-hidden="true"></i> Sở thích</h2>
+        <ul class="so-thich">
+          <li><i class="fa-solid fa-film" aria-hidden="true"></i> Xem phim</li>
+          <li><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i> Đi chơi</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><i class="fa-solid fa-user-group" aria-hidden="true"></i> Người tham chiếu</h2>
+        <p>Sẵn sàng cung cấp khi được yêu cầu.</p>
+      </section>
+    </div>
+
+    <!-- Hàng 2, cột phải (60%): học vấn, chứng chỉ và giải thưởng, kinh nghiệm làm việc -->
+    <div class="cot-phai">
+      <section>
+        <h2><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> Học vấn</h2>
+        <ol class="moc-thoi-gian">
+          <li>
+            <p class="thoi-gian">2026 – nay</p>
+            <h3>Sinh viên năm nhất</h3>
+            <p class="noi">Trường Đại học Sư phạm Thành phố Hồ Chí Minh</p>
+          </li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><i class="fa-solid fa-award" aria-hidden="true"></i> Chứng chỉ và giải thưởng</h2>
+        <ol class="moc-thoi-gian">
+          <li>
+            <p class="thoi-gian">2025</p>
+            <h3>Giải Nhì học sinh giỏi môn Toán</h3>
+            <p class="noi">Kỳ thi học sinh giỏi cấp tỉnh</p>
+          </li>
+          <li>
+            <p class="thoi-gian">2024</p>
+            <h3>Giải Ba học sinh giỏi môn Toán</h3>
+            <p class="noi">Kỳ thi học sinh giỏi cấp tỉnh</p>
+          </li>
+        </ol>
+      </section>
+
+      <section>
+        <h2><i class="fa-solid fa-briefcase" aria-hidden="true"></i> Kinh nghiệm làm việc</h2>
+        <ol class="moc-thoi-gian">
+          <li>
+            <p class="thoi-gian">11/2026</p>
+            <h3>Dự án: Hồ cá vui nhộn</h3>
+            <p class="noi">Môn Thiết kế Web</p>
+            <p class="mo-ta">Trang web hồ cá chuyển động bằng CSS3 animation, có nút đổi cảnh nền, bật nhạc và tạm dừng. <a href="../HO_CA_VUI_NHON/ho_ca.html">Xem dự án</a></p>
+          </li>
+          <li>
+            <p class="thoi-gian">11/2026</p>
+            <h3>Dự án: Trang bài tập trên GitHub Pages</h3>
+            <p class="noi">Môn Thiết kế Web</p>
+            <p class="mo-ta">Trang chủ tổng hợp các bài tập của môn học, gồm bài Hồ cá vui nhộn và CV này. <a href="../index.html">Xem trang</a></p>
+          </li>
+        </ol>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
