@@ -1,6 +1,11 @@
 # Bài tập Thiết kế Web
 
-Trang GitHub Pages các bài tập môn Thiết kế Web, xem tại https://5201104062.github.io
+**Xem trang web:** https://5201104062.github.io/DoKhanhNguyen.github.io/
+
+- Bài 6.1.1: [Hồ cá vui nhộn](https://5201104062.github.io/DoKhanhNguyen.github.io/HO_CA_VUI_NHON/ho_ca.html)
+- Bài 6.1.3: [Thiết kế mẫu CV](https://5201104062.github.io/DoKhanhNguyen.github.io/CV_CA_NHAN/cv.html)
+
+Các bài tập môn Thiết kế Web (HTML5 và CSS3), đăng bằng GitHub Pages. Cấu trúc thư mục:
 
 ```
 index.html                trang chủ, dẫn tới từng bài
